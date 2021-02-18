@@ -1,18 +1,26 @@
-from django.shortcuts import HttpResponse, render, redirect
-from ex.models import Article, UserFavouriteArticle
-from django.views.generic import TemplateView, ListView, FormView, RedirectView
-from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render
+from django.views.generic import ListView
+from django.shortcuts import redirect
+from django.views.generic.base import RedirectView
+from .models import Article
 
-class HomeView(TemplateView):
-    # pattern_name = '/articles'
-    model = Article
-    template_name = "ex/articles.html"
-
-class LoginView(FormView):
-    form_class = AuthenticationForm
-    template_name = "ex/login.html"
-    success_url = "/"
-
+# Create your views here.
 class ArticlesView(ListView):
     model = Article
-    template_name = "ex/articles.html"
+
+
+# https://docs.djangoproject.com/fr/1.11/ref/class-based-views/base/#redirectview
+class HomeView(RedirectView):
+    """
+    simple redirection vers articles
+    """
+    permanent = False
+    query_string = True
+    pattern_name = 'articles'
+    #pattern_name = redirect(reverse('articles'))
+
+    def get_redirect_url(self, *args, **kwargs):
+
+        return super(HomeView, self).get_redirect_url(*args, **kwargs)
+
+
